@@ -1,0 +1,6 @@
+server:
+  port: 47079
+  token: "your-secret-token"
+
+ajiasu:
+  binary: "/opt/ajiasu-proxy-api/ajiasu"

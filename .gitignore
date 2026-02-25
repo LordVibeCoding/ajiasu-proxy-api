@@ -1,0 +1,15 @@
+# Binary
+ajiasu-proxy-api
+*.exe
+
+# Config with secrets
+configs/app.yaml
+
+# Data
+data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store

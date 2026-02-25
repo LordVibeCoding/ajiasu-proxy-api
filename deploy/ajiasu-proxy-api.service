@@ -1,0 +1,13 @@
+[Unit]
+Description=Ajiasu Proxy API Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/ajiasu-proxy-api
+ExecStart=/opt/ajiasu-proxy-api/ajiasu-proxy-api
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
