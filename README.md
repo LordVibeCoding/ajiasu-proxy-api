@@ -71,16 +71,18 @@ sudo ufw allow 47076/tcp  # 代理端口
 
 ### POST /api/ajiasu/auto
 
-智能选节点：按城市过滤 → 随机选 → 连接 → 测速验证（延迟 < 500ms）→ 失败自动重试（最多 8 次）。
+智能选节点：随机选 → 连接 → 测速验证（延迟 < 500ms）→ 失败自动重试（最多 8 次）。
+
+默认从**全部可用节点**中选择，只看速度，谁快用谁。也可传入 `cities` 参数限制特定城市。
 
 每次调用会切换到新节点，出口 IP 随之改变。
 
 ```bash
-# 使用默认城市（广州、深圳、厦门、福州、南宁）
+# 从全部节点中智能选择（默认）
 curl -X POST http://VPS:47079/api/ajiasu/auto \
   -H "Authorization: Bearer <token>"
 
-# 指定城市
+# 限制特定城市
 curl -X POST http://VPS:47079/api/ajiasu/auto \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
