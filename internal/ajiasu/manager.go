@@ -182,8 +182,8 @@ type AutoResult struct {
 	ProxyAddr string `json:"proxy_addr"`
 }
 
-// DefaultCities 默认偏好城市
-var DefaultCities = []string{"广州", "深圳", "厦门", "福州", "南宁"}
+// DefaultCities 默认偏好城市（为空表示不限制城市）
+var DefaultCities []string
 
 // TestConnection 测试当前代理连接的延迟和出口 IP
 func (m *Manager) TestConnection() (delayMs int, ip string, err error) {
@@ -222,26 +222,26 @@ func (m *Manager) TestConnection() (delayMs int, ip string, err error) {
 
 // AutoSelect 智能选节点：过滤城市 → 随机选 → 连接 → 测速验证 → 失败重试
 func (m *Manager) AutoSelect(preferCities []string) (*AutoResult, error) {
-	if len(preferCities) == 0 {
-		preferCities = DefaultCities
-	}
-
 	nodes, err := m.List()
 	if err != nil {
 		return nil, fmt.Errorf("获取节点列表失败: %w", err)
 	}
 
 	var filtered []Node
-	for _, n := range nodes {
-		for _, city := range preferCities {
-			if strings.Contains(n.Name, city) {
-				filtered = append(filtered, n)
-				break
+	if len(preferCities) > 0 {
+		for _, n := range nodes {
+			for _, city := range preferCities {
+				if strings.Contains(n.Name, city) {
+					filtered = append(filtered, n)
+					break
+				}
 			}
 		}
+	} else {
+		filtered = nodes
 	}
 	if len(filtered) == 0 {
-		return nil, fmt.Errorf("没有匹配城市 %v 的节点", preferCities)
+		return nil, fmt.Errorf("没有可用节点")
 	}
 
 	rand.Shuffle(len(filtered), func(i, j int) {
